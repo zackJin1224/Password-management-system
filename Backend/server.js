@@ -1,10 +1,10 @@
 //server.js
 const express = require('express');
 const cors = require('cors');
-require('dotenv');
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 
 //middleware
 app.use(cors()); //Allow cross-origin requests
@@ -19,7 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/passwords', passwordRoutes);
 
 //Root routes -test server run or not
-app.get('/Backend', (req, res) => {
+app.get('/', (_req, res) => {
   res.json({
     message: 'API server is running',
     version: '1.0.0',

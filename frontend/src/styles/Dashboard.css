@@ -50,21 +50,75 @@
   margin: 0 auto;
 }
 
-.welcome-card {
-  background: white;
+.dashboard-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-toolbar h2 {
+  margin: 0;
+  color: #333;
+}
+
+.btn-add {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+}
+
+.loading {
+  text-align: center;
   padding: 40px;
+  color: #666;
+  font-size: 1.2em;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
 }
 
-.welcome-card h2 {
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.welcome-card p {
+.empty-state p {
+  font-size: 1.2em;
   color: #666;
-  font-size: 1.1em;
   margin: 10px 0;
+}
+
+.passwords-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 15px 20px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.4em;
+  }
+
+  .dashboard-main {
+    padding: 20px;
+  }
+
+  .passwords-grid {
+    grid-template-columns: 1fr;
+  }
 }

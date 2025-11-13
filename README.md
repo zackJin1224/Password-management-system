@@ -602,9 +602,9 @@ MIT License
 
 ## 👨‍💻 Author
 
-**Zach**
+**Zack**
 
-- GitHub: [@zachJin1224](https://github.com/zachJin1224)
+- GitHub: [@zackJin1224](https://github.com/zackJin1224)
 - University: University of Pittsburgh
 
 ---

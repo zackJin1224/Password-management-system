@@ -287,7 +287,7 @@ The frontend will run at `http://localhost:3000`
 
 ### 1. Register an Account
 
-![alt text](image.png)
+![alt text](images/signUp.png)
 
 - Visit `http://localhost:3000`
 - Click “Register Now”
@@ -296,14 +296,14 @@ The frontend will run at `http://localhost:3000`
 
 2. Login
 
-![alt text](image-1.png)
+![alt text](images/Login.png)
 
 - Log in using your registered email and password
 - After successful login, you will be automatically redirected to the Dashboard
 
 ### 3. Set the Master Key
 
-![alt text](image-2.png)
+![alt text](images/setMasterKey.png)
 
 - The master key setup window will appear upon first login
 - Enter a strong key (minimum 8 characters)
@@ -311,7 +311,7 @@ The frontend will run at `http://localhost:3000`
 
 4. Add Password
 
-![alt text](image-3.png)
+![alt text](images/addNewPwd.png)
 
 - Click the “➕ Add Password” button
 - Fill in website details:
@@ -323,7 +323,7 @@ The frontend will run at `http://localhost:3000`
 
 ### 5. Manage Passwords
 
-![alt text](image-4.png)
+![alt text](images/MyPassword.png)
 
 - **View Password**: Tap the 👁️ icon to show/hide the password
 - **Copy Password**: Tap the 📋 icon to copy to clipboard

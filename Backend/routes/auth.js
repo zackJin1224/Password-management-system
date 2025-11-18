@@ -1,7 +1,7 @@
 // User Registration and Login Routing
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
+const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const pool = require('../db');
 
@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
 
     // Encrypt password
     const saltRounds = 10;
-    const password_hash = await bcrypt.hash(password, saltRounds);
+    const password_hash = await argon2.hash(password);
 
     // Insert a new user into the database
     const result = await pool.query(
@@ -98,7 +98,7 @@ router.post('/login', async (req, res) => {
     const user = result.rows[0];
 
     //Verify Password
-    const isValidPassword = await bcrypt.compare(password, user.password_hash);
+    const isValidPassword = await argon2.verify(user.password_hash, password);
 
     if (!isValidPassword) {
       return res.status(401).json({

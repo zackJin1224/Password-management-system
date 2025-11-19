@@ -1,8 +1,21 @@
 import axios from 'axios';
 
+// use different baseURL according to environment
+const getBaseURL = () => {
+  //
+  if (import.meta.env.PROD) {
+    return (
+      import.meta.env.VITE_API_URL ||
+      'https://password-manager-oy4w.onrender.com'
+    );
+  }
+
+  return '/api';
+};
+
 // create axios instance
 const axiosInstance = axios.create({
-  baseURL: '/api', // All requests will be prefixed with this prefix.
+  baseURL: getBaseURL(), // All requests will be prefixed with this prefix.
   timeout: 10000, // Request timeout: 10 seconds
   headers: {
     'Content-Type': 'application/json',
@@ -41,4 +54,3 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
-

@@ -9,9 +9,10 @@ function PasswordForm({ password, onSubmit, onCancel }) {
   const [username, setUsername] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState('');
 
   const { masterKey } = useMasterKey();
+
   // If in edit mode, populate existing data
   useEffect(() => {
     if (password) {
@@ -20,6 +21,7 @@ function PasswordForm({ password, onSubmit, onCancel }) {
       setUsername(password.username || '');
     }
   }, [password]);
+
   const handleGeneratePassword = () => {
     const generated = generatePassword(16);
     setPasswordValue(generated);
@@ -29,6 +31,7 @@ function PasswordForm({ password, onSubmit, onCancel }) {
     e.preventDefault();
     setError('');
     setLoading(true);
+
     // Validation
     if (!website) {
       setError('Website cannot be empty');
@@ -41,6 +44,7 @@ function PasswordForm({ password, onSubmit, onCancel }) {
       setLoading(false);
       return;
     }
+
     // Encrypted Password
     let encryptedPassword;
     if (passwordValue) {
@@ -60,6 +64,7 @@ function PasswordForm({ password, onSubmit, onCancel }) {
     await onSubmit(passwordData);
     setLoading(false);
   };
+
   return (
     <div className="modal-overlay">
       <div className="modal-content password-form-modal">
@@ -68,6 +73,7 @@ function PasswordForm({ password, onSubmit, onCancel }) {
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>
+          {/* 1. Website */}
           <div className="form-group">
             <label>Website *</label>
             <input
@@ -79,6 +85,7 @@ function PasswordForm({ password, onSubmit, onCancel }) {
             />
           </div>
 
+          {/* 2. Username/Email */}
           <div className="form-group">
             <label>Username/Email</label>
             <input
@@ -89,6 +96,8 @@ function PasswordForm({ password, onSubmit, onCancel }) {
               disabled={loading}
             />
           </div>
+
+          {/* 3. Password */}
           <div className="form-group">
             <label>
               Password {password && '(Leave blank to keep current)'}
@@ -105,16 +114,6 @@ function PasswordForm({ password, onSubmit, onCancel }) {
                 }
                 disabled={loading}
               />
-              <div className="form-group">
-                <label>Notes</label>
-                <textarea
-                  value={notes}
-                  onChange={e => setNotes(e.target.value)}
-                  placeholder="Additional notes..."
-                  disabled={loading}
-                  rows="3"
-                />
-              </div>
               <button
                 type="button"
                 onClick={handleGeneratePassword}
@@ -125,16 +124,20 @@ function PasswordForm({ password, onSubmit, onCancel }) {
               </button>
             </div>
           </div>
+
+          {/* 4. Notes  */}
           <div className="form-group">
             <label>Notes</label>
             <textarea
               value={notes}
               onChange={e => setNotes(e.target.value)}
-              placeholder="Additional notes..."
+              placeholder="Additional notes (optional)..."
               disabled={loading}
               rows="3"
             />
           </div>
+
+          {/* 5. Buttons */}
           <div className="modal-buttons">
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? 'Saving...' : 'Save'}

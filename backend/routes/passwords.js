@@ -13,7 +13,7 @@ router.get('/', authenticateToken, async (req, res) => {
 
     //query all passwords records of current user
     const result = await pool.query(
-      'SELECT id, site_name, site_url, username, encrypted_password, created_at, updated_at FROM passwords WHERE user_id = $1 ORDER BY created_at DESC',
+      'SELECT id, website, username, encrypted_password, notes, created_at, updated_at FROM passwords WHERE user_id = $1 ORDER BY created_at DESC',
       [userId]
     );
 
@@ -36,25 +36,19 @@ router.post('/', authenticateToken, async (req, res) => {
   try {
     //get data
     const userId = req.user.userId;
-    const { site_name, site_url, username, encrypted_password } = req.body;
+    const { website, username, encrypted_password, notes } = req.body;
 
     // authenticate not null
-    if (!site_name || !encrypted_password) {
+    if (!website || !encrypted_password) {
       return res.status(400).json({
-        error: 'Site name and password cannot be null',
+        error: 'Website and password cannot be null',
       });
     }
 
     // insert new password record
     const result = await pool.query(
-      'INSERT INTO passwords (user_id, site_name, site_url, username, encrypted_password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [
-        userId,
-        site_name,
-        site_url || null,
-        username || null,
-        encrypted_password,
-      ]
+      'INSERT INTO passwords (user_id, website, username, encrypted_password, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [userId, website, username || null, encrypted_password, notes || null]
     );
 
     const newPassword = result.rows[0];
@@ -71,6 +65,7 @@ router.post('/', authenticateToken, async (req, res) => {
     });
   }
 });
+
 //get single password detail
 //GET /api/passwords/:id
 router.get('/:id', authenticateToken, async (req, res) => {
@@ -101,12 +96,12 @@ router.put('/:id', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
     const passwordId = req.params.id;
-    const { site_name, site_url, username, encrypted_password } = req.body;
+    const { website, username, encrypted_password, notes } = req.body;
 
     // authenticate the not null
-    if (!site_name || !encrypted_password) {
+    if (!website || !encrypted_password) {
       return res.status(400).json({
-        error: 'Site name and password cannot be null',
+        error: 'Website and password cannot be null',
       });
     }
 
@@ -123,12 +118,12 @@ router.put('/:id', authenticateToken, async (req, res) => {
     }
     // update the password record
     const result = await pool.query(
-      'UPDATE passwords SET site_name = $1, site_url = $2, username = $3, encrypted_password = $4, updated_at = CURRENT_TIMESTAMP WHERE id = $5 AND user_id = $6 RETURNING *',
+      'UPDATE passwords SET website = $1, username = $2, encrypted_password = $3, notes = $4, updated_at = CURRENT_TIMESTAMP WHERE id = $5 AND user_id = $6 RETURNING *',
       [
-        site_name,
-        site_url || null,
+        website,
         username || null,
         encrypted_password,
+        notes || null,
         passwordId,
         userId,
       ]
@@ -142,6 +137,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Server error, please try again later' });
   }
 });
+
 //delete password
 //DELETE /api/passwords/:id
 router.delete('/:id', authenticateToken, async (req, res) => {
@@ -172,4 +168,5 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Server error, please try again later' });
   }
 });
+
 module.exports = router;

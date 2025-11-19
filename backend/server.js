@@ -9,7 +9,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 //middleware
-app.use(cors()); //Allow cross-origin requests
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+})); //Allow cross-origin requests
 app.use( express.json() ); //Parsing JSON Request Body
 app.use( helmet() ); // security headers
 

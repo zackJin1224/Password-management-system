@@ -10,7 +10,7 @@ function PasswordForm({ password, onSubmit, onCancel }) {
   const [passwordValue, setPasswordValue] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { masterKey } = useMasterKey();
   // If in edit mode, populate existing data
   useEffect(() => {
@@ -20,16 +20,16 @@ function PasswordForm({ password, onSubmit, onCancel }) {
       setUsername(password.username || '');
     }
   }, [password]);
-const handleGeneratePassword = () => {
+  const handleGeneratePassword = () => {
     const generated = generatePassword(16);
     setPasswordValue(generated);
-};
+  };
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setError('');
-  setLoading( true );
-  // Validation
+    setLoading(true);
+    // Validation
     if (!website) {
       setError('Website cannot be empty');
       setLoading(false);
@@ -41,7 +41,7 @@ const handleSubmit = async (e) => {
       setLoading(false);
       return;
     }
-  // Encrypted Password
+    // Encrypted Password
     let encryptedPassword;
     if (passwordValue) {
       encryptedPassword = encryptPassword(passwordValue, masterKey);
@@ -59,7 +59,7 @@ const handleSubmit = async (e) => {
 
     await onSubmit(passwordData);
     setLoading(false);
-};
+  };
   return (
     <div className="modal-overlay">
       <div className="modal-content password-form-modal">
@@ -76,16 +76,6 @@ const handleSubmit = async (e) => {
               onChange={e => setWebsite(e.target.value)}
               placeholder="Example: gmail.com"
               disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <label>Notes</label>
-            <textarea
-              value={notes}
-              onChange={e => setNotes(e.target.value)}
-              placeholder="Additional notes..."
-              disabled={loading}
-              rows="3"
             />
           </div>
 
@@ -115,6 +105,16 @@ const handleSubmit = async (e) => {
                 }
                 disabled={loading}
               />
+              <div className="form-group">
+                <label>Notes</label>
+                <textarea
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  placeholder="Additional notes..."
+                  disabled={loading}
+                  rows="3"
+                />
+              </div>
               <button
                 type="button"
                 onClick={handleGeneratePassword}
@@ -124,6 +124,16 @@ const handleSubmit = async (e) => {
                 Generate
               </button>
             </div>
+          </div>
+          <div className="form-group">
+            <label>Notes</label>
+            <textarea
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+              placeholder="Additional notes..."
+              disabled={loading}
+              rows="3"
+            />
           </div>
           <div className="modal-buttons">
             <button type="submit" className="btn-primary" disabled={loading}>

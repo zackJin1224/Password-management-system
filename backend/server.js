@@ -12,11 +12,30 @@ app.set('trust proxy', 1);// trust reverse proxys
 
 //middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function(origin, callback) {
+    // Development Environment: Allow All
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    // Production Environment: Check Domain Name
+    const allowedDomains = [
+      process.env.FRONTEND_URL,
+      'http://localhost:3000',
+      'http://localhost:5173',
+    ];
+
+    // If it's on the whitelist or a Vercel domain
+    if (allowedDomains.includes(origin) || origin.includes('vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-})); //Allow cross-origin requests
+}));//Allow cross-origin requests
 app.use( express.json() ); //Parsing JSON Request Body
 app.use( helmet() ); // security headers
 

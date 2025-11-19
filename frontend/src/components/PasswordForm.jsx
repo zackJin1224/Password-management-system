@@ -4,8 +4,8 @@ import { encryptPassword, generatePassword } from '../utils/crypto';
 import '../styles/PasswordForm.css';
 
 function PasswordForm({ password, onSubmit, onCancel }) {
-  const [siteName, setSiteName] = useState('');
-  const [siteUrl, setSiteUrl] = useState('');
+  const [website, setWebsite] = useState('');
+  const [notes, setNotes] = useState('');
   const [username, setUsername] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [error, setError] = useState('');
@@ -15,10 +15,9 @@ function PasswordForm({ password, onSubmit, onCancel }) {
   // If in edit mode, populate existing data
   useEffect(() => {
     if (password) {
-      setSiteName(password.site_name || '');
-      setSiteUrl(password.site_url || '');
+      setWebsite(password.website || '');
+      setNotes(password.notes || '');
       setUsername(password.username || '');
-      // Note: Password is empty during editing; requires user re-entry or use of original password
     }
   }, [password]);
 const handleGeneratePassword = () => {
@@ -31,8 +30,8 @@ const handleSubmit = async (e) => {
     setError('');
   setLoading( true );
   // Validation
-    if (!siteName) {
-      setError('Website name cannot be empty');
+    if (!website) {
+      setError('Website cannot be empty');
       setLoading(false);
       return;
     }
@@ -52,10 +51,10 @@ const handleSubmit = async (e) => {
     }
 
     const passwordData = {
-      site_name: siteName,
-      site_url: siteUrl || null,
+      website: website,
       username: username || null,
-      encrypted_password: encryptedPassword
+      encrypted_password: encryptedPassword,
+      notes: notes || null,
     };
 
     await onSubmit(passwordData);
@@ -65,28 +64,28 @@ const handleSubmit = async (e) => {
     <div className="modal-overlay">
       <div className="modal-content password-form-modal">
         <h2>{password ? 'Edit Password' : 'Add New Password'}</h2>
-        
+
         {error && <div className="error-message">{error}</div>}
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Website Name *</label>
+            <label>Website *</label>
             <input
               type="text"
-              value={siteName}
-              onChange={(e) => setSiteName(e.target.value)}
-              placeholder="Example: Gmail"
+              value={website}
+              onChange={e => setWebsite(e.target.value)}
+              placeholder="Example: gmail.com"
               disabled={loading}
             />
           </div>
-    <div className="form-group">
-            <label>Website URL</label>
-            <input
-              type="url"
-              value={siteUrl}
-              onChange={(e) => setSiteUrl(e.target.value)}
-              placeholder="https://example.com"
+          <div className="form-group">
+            <label>Notes</label>
+            <textarea
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+              placeholder="Additional notes..."
               disabled={loading}
+              rows="3"
             />
           </div>
 
@@ -95,19 +94,25 @@ const handleSubmit = async (e) => {
             <input
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={e => setUsername(e.target.value)}
               placeholder="user@example.com"
               disabled={loading}
             />
           </div>
-<div className="form-group">
-            <label>Password {password && '(Leave blank to keep current)'}</label>
+          <div className="form-group">
+            <label>
+              Password {password && '(Leave blank to keep current)'}
+            </label>
             <div className="password-input-group">
               <input
                 type="text"
                 value={passwordValue}
-                onChange={(e) => setPasswordValue(e.target.value)}
-                placeholder={password ? 'Enter a new password or leave blank' : 'Enter password'}
+                onChange={e => setPasswordValue(e.target.value)}
+                placeholder={
+                  password
+                    ? 'Enter a new password or leave blank'
+                    : 'Enter password'
+                }
                 disabled={loading}
               />
               <button
@@ -120,13 +125,13 @@ const handleSubmit = async (e) => {
               </button>
             </div>
           </div>
-    <div className="modal-buttons">
+          <div className="modal-buttons">
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? 'Saving...' : 'Save'}
             </button>
-            <button 
-              type="button" 
-              onClick={onCancel} 
+            <button
+              type="button"
+              onClick={onCancel}
               className="btn-secondary"
               disabled={loading}
             >

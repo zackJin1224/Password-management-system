@@ -38,6 +38,7 @@ export const updatePassword = async (id, passwordData) => {
 // delete password
 export const deletePassword = async id => {
   try {
+    
     await axios.delete(`/passwords/${id}`);
     return { success: true };
   } catch (error) {

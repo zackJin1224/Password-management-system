@@ -29,7 +29,7 @@ function PasswordCard({ password, onEdit, onDelete }) {
   return (
     <div className="password-card">
       <div className="password-header">
-        <h3>{password.site_name}</h3>
+        <h3>{password.website}</h3>
         <div className="password-actions">
           <button onClick={onEdit} className="btn-icon" title="Edit">
             ✏️
@@ -41,16 +41,10 @@ function PasswordCard({ password, onEdit, onDelete }) {
       </div>
 
       <div className="password-details">
-        {password.site_url && (
+        {password.notes && (
           <div className="password-field">
-            <span className="field-label">Website:</span>
-            <a
-              href={password.site_url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {password.site_url}
-            </a>
+            <span className="field-label">Notes:</span>
+            <span>{password.notes}</span>
           </div>
         )}
         {password.username && (

@@ -6,7 +6,7 @@ const getBaseURL = () => {
   if (import.meta.env.PROD) {
     return (
       import.meta.env.VITE_API_URL ||
-      'https://password-manager-oy4w.onrender.com'
+      'https://password-manager-oy4w.onrender.com/api'
     );
   }
 

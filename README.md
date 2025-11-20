@@ -57,6 +57,75 @@ This is a full-stack password management application designed to help users secu
 
 ---
 
+## 🚀 Recent Updates
+
+#### 🌐 Infrastructure Upgrades
+
+- ✅ **Production Deployment**: Migrated from local development to full cloud infrastructure
+  - Frontend: Deployed to Vercel with global CDN
+  - Backend: Deployed to Render with auto-scaling
+  - Database: Migrated to Supabase PostgreSQL
+- ✅ **HTTPS/TLS**: All services secured with automatic SSL certificates
+- ✅ **CI/CD Pipeline**: Automated deployment from GitHub for both frontend and backend
+- ✅ **Environment Configuration**: Separated development and production environments with proper environment variable management
+
+#### 🔧 Backend Enhancements
+
+- ✅ **CORS Configuration**: Dynamic CORS policy supporting multiple Vercel deployment URLs
+- ✅ **Reverse Proxy Support**: Added `trust proxy` setting for proper client IP detection behind Render's load balancer
+- ✅ **Database Connection**: PostgreSQL connection pooling with SSL for Supabase
+- ✅ **API Error Handling**: Improved error responses and logging
+
+#### 🎨 Frontend Improvements
+
+- ✅ **Database Schema Alignment**: Updated field names to match backend schema
+  - `site_name` → `website`
+  - `site_url` → `notes` (repurposed for additional password notes)
+- ✅ **Form UX**: Reorganized password form fields for better logical flow
+- ✅ **Styling Consistency**: Unified input and textarea styles across all form fields
+- ✅ **API Configuration**: Environment-based API URL configuration for seamless deployment
+
+#### 🔒 Security Updates
+
+- ✅ **Secure Headers**: Helmet.js integration for security headers
+- ✅ **Rate Limiting**: Protection against brute force attacks
+  - Login endpoints: 5 attempts per 15 minutes
+  - API endpoints: 100 requests per 15 minutes
+- ✅ **Database Security**: Encrypted connections to PostgreSQL database
+
+#### 🐛 Bug Fixes
+
+- ✅ Fixed CORS issues with multiple Vercel deployment URLs
+- ✅ Resolved database connection errors with correct Supabase credentials
+- ✅ Fixed field name mismatches between frontend and backend
+- ✅ Corrected API endpoint paths for production environment
+
+---
+
+## 📊 Project Status
+
+- **Status**: ✅ Live in Production
+- **Frontend**: https://password-management-system-j13lsqd5g-zackjin1224s-projects.vercel.app
+- **Backend API**: https://password-manager-oy4w.onrender.com
+- **Database**: Supabase PostgreSQL
+
+### 🔒 Security Note
+
+This is a **demonstration project** for portfolio purposes. The application implements:
+
+- JWT authentication with rate limiting
+- End-to-end encryption for stored passwords
+- CORS protection and security headers
+- Encrypted database connections
+
+**Please use only for testing purposes. Do not store real sensitive data.**
+
+### 🛡️ Protected Endpoints
+
+- All `/api/passwords/*` endpoints require JWT authentication
+- Login attempts limited to 5 per 15 minutes
+- API requests limited to 100 per 15 minutes per IP
+
 ## 🛠️ Technology Stack
 
 ### Front-end Technology
@@ -153,10 +222,10 @@ CREATE TABLE users (
 CREATE TABLE passwords (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    site_name VARCHAR(100) NOT NULL,
-    site_url VARCHAR(255),
-    username VARCHAR(100),
-    encrypted_password TEXT NOT NULL,  -- AES encrypted
+    website VARCHAR(255) NOT NULL,
+    username VARCHAR(255),
+    encrypted_password TEXT NOT NULL,
+    notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -247,10 +316,10 @@ CREATE TABLE users (
 CREATE TABLE passwords (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    site_name VARCHAR(100) NOT NULL,
-    site_url VARCHAR(255),
-    username VARCHAR(100),
+    website VARCHAR(255) NOT NULL,
+    username VARCHAR(255),
     encrypted_password TEXT NOT NULL,
+    notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -408,6 +477,29 @@ The frontend will run at `http://localhost:3000`
 └─────────────────────────────────────────────────────────┘
 ```
 
+## 🏗️ New Deployment Architecture
+
+```
+┌─────────────┐
+│   GitHub    │ ─── Push Code
+└──────┬──────┘
+       │
+       ├────────────────┬─────────────────┐
+       │                │                 │
+       ↓                ↓                 ↓
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│   Vercel    │  │   Render    │  │  Supabase   │
+│  (Frontend) │←─│  (Backend)  │←─│ (Database)  │
+│             │  │             │  │             │
+│ React + Vite│  │ Node.js +   │  │ PostgreSQL  │
+│ Global CDN  │  │ Express.js  │  │ Managed DB  │
+└─────────────┘  └─────────────┘  └─────────────┘
+       │                │
+       └────────────────┘
+              │
+         [Users via HTTPS]
+```
+
 ---
 
 ### Data Flow
@@ -496,10 +588,10 @@ Response:
     {
       "id": 1,
       "user_id": 1,
-      "site_name": "Gmail",
-      "site_url": "https://gmail.com",
+      "website": "https://gmail.com",
       "username": "user@gmail.com",
       "encrypted_password": "U2FsdGVkX1...",
+      "notes": "ok!",
       "created_at": "2025-11-10T...",
       "updated_at": "2025-11-10T..."
     }
@@ -516,10 +608,10 @@ Content-Type: application/json
 
 Request Body:
 {
-  “site_name”: “Gmail”,
-  “site_url”: “https://gmail.com”,
-  “username”: “user@gmail.com”,
-  “encrypted_password”: “U2FsdGVkX1...”
+      "website": "https://gmail.com",
+      "username": "user@gmail.com",
+      "encrypted_password": "U2FsdGVkX1...",
+      "notes": "ok!",
 }
 
 Response:
@@ -538,10 +630,10 @@ Content-Type: application/json
 
 Request Body:
 {
-  “site_name”: “Gmail”,
-  “site_url”: “https://gmail.com”,
-  “username”: “newuser@gmail.com”,
-  “encrypted_password”: “U2FsdGVkX1...”
+      "website": "https://gmail.com",
+      "username": "user@gmail.com",
+      "encrypted_password": "U2FsdGVkX1...",
+      "notes": "ok!",
 }
 
 Response:
